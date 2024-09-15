@@ -1,0 +1,25 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    width: 100%;
+    background-image: linear-gradient(to right, var(--yellow), var(--light-yellow));
+    border-radius: 30px;
+    border: none;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--black);
+    transition: 300ms;
+}
+
+.icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 0.6rem;
+}
+
+.button:hover {
+    background-image: linear-gradient(var(--yellow), var(--yellow));
+    transform: scale(1.010);
+}
