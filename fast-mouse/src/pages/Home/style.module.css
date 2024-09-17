@@ -90,3 +90,29 @@
 .link:hover{
     color: var(--light-yellow);
 }
+
+.login {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.line {
+    height: 1px;
+    width: 100%;
+    background-color: var(--gray);
+}
+
+.loginWith {
+    text-wrap: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 500px;
+    margin: 2rem 0rem;
+}
+
+.loginWith p {
+    color: var(--gray);
+}
