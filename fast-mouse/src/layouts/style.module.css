@@ -1,0 +1,41 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.topBg {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    z-index: -1;
+}
+
+.bottomBg {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    z-index: -1;
+}
+
+.header {
+    position: absolute;
+    top: -30px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    height: 250px;
+}
+
+@media screen and (max-width: 768px) {
+    .topBg {
+        display: none;
+    }
+    .header {
+        top: -20px;
+        height: 180px;
+    }
+}
