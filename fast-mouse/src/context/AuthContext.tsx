@@ -1,4 +1,4 @@
-import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth'
+import { User, onAuthStateChanged, signOut as firebaseSignOut, getAuth } from 'firebase/auth'
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { auth } from '../services/firebase/config'
 
@@ -19,17 +19,26 @@ export function AuthProvider({ children }: AuthContextProps){
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+      const auth = getAuth()
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-          setUser(user);
-          setLoading(false);
+          if(user) {
+            setUser(user);
+            sessionStorage.setItem('auth', 'true')
+          }else {
+            setUser(null)
+            sessionStorage.removeItem('auth')
+          }
+          setLoading(false)
         })
     
-        return () => unsubscribe();
+        return unsubscribe
     }, [])
 
     const logout = async () => {
       try{
+        const auth = getAuth()
         await firebaseSignOut(auth)
+        sessionStorage.removeItem('auth')
       } catch(error) {
         console.error('Sign out error: ', error)
       }
