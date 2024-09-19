@@ -5,8 +5,13 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { auth } from '../../services/firebase/config'
 import Layout from '../../layouts'
 import { useNavigate } from 'react-router-dom'
+import { io, Socket } from 'socket.io-client'
 
-function Home() {
+interface HomeProps {
+  setSocket: React.Dispatch<React.SetStateAction<Socket | undefined>>
+}
+
+function Home({ setSocket }: HomeProps) {
   const navigate = useNavigate()
 
   const handleLogin = async () => {
@@ -14,8 +19,18 @@ function Home() {
     try {
       const result = await signInWithPopup(auth, provider)
       const token = await result.user.getIdToken()
+      const socket = io('http://localhost:3000')
+      socket.emit('set_user', {
+        displayName: result.user.displayName,
+        uid: result.user.uid
+      })
+
+      if(socket) {
+        setSocket(socket)
+      }
+      
       navigate('/room')
-      console.log('Token:', token)
+      console.log('Token:', token, 'UID: ', result.user.uid)
     } catch (error) {
       console.error('Error ', error)
     }

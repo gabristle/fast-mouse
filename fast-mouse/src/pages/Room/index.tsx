@@ -3,8 +3,35 @@ import Layout from '../../layouts'
 import Button from '../../components/Button'
 import iconUser from '../../assets/icon-user.png'
 import iconOwner from '../../assets/icon-owner.png'
+import { useEffect, useState } from 'react'
+import { Socket } from 'socket.io-client'
 
-function Room() {
+interface RoomProps {
+  socket: Socket | undefined
+}
+
+interface ConnectedUser {
+  uid: string
+  displayName: string
+}
+
+const Room: React.FC<RoomProps> = ({ socket }) => {
+  const [users, setUsers] = useState<ConnectedUser[]>([])
+
+  useEffect(() => {
+    if (!socket) return
+
+    const handleUsersUpdate = (data: ConnectedUser[]) => {
+      setUsers(data)
+    };
+
+    socket.on('users', handleUsersUpdate)
+
+    return () => {
+      socket.off('users', handleUsersUpdate)
+    };
+  }, [socket])
+
   return (
     <>
       <Layout headerClass={styles.header}>
@@ -17,32 +44,16 @@ function Room() {
                   <img src={iconOwner} alt="" className={styles.iconInfo}/>
                   <p>Gabriella Ribeiro</p>
                 </div>
-                <div className={styles.person}>
-                  <img src={iconUser} alt="" className={styles.iconUser}/>
-                  <div className={styles.rank}>1</div>
-                  <p>Gabriella Ribeiro</p>
-                </div>
-                <div className={styles.person}>
-                  <img src={iconUser} alt="" className={styles.iconUser}/>
-                  <div className={styles.rank}>2</div>
-                  <p>Gabriella Ribeiro</p>
-                </div>
-                <div className={styles.person}>
-                  <img src={iconUser} alt="" className={styles.iconUser}/>
-                  <div className={styles.rank}>3</div>
-                  <p>Gabriella Ribeiro</p>
-                </div>
-                <div className={styles.person}>
-                  <img src={iconUser} alt="" className={styles.iconUser}/>
-                  <div className={styles.rank}>4</div>
-                  <p>Gabriella Ribeiro</p>
-                </div>
-                <div className={styles.person}>
-                  <img src={iconUser} alt="" className={styles.iconUser}/>
-                  <div className={styles.rank}>5</div>
-                  <p>Gabriella Ribeiro</p>
-                </div>
-              </div>
+                {users && users.map((user, index) => {
+                  return (
+                    <div className={styles.person} key={index}>
+                      <img src={iconUser} alt="" className={styles.iconUser}/>
+                      <div className={styles.rank}>{index+1}</div>
+                      <p>{user.displayName}</p>
+                    </div>
+                  )
+                })}  
+              </div> 
             </aside>
             <section className={styles.section}>
               <select name="" id="" className={styles.select}>
